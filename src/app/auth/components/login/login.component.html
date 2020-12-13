@@ -1,0 +1,35 @@
+<div class="login-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 col-xs-12">
+        <h1 class="text-xs-center">Log In</h1>
+        <p class="text-xs-center"><a [routerLink]="['/register']">Create an account?</a></p>
+        <app-back-end-message *ngIf="validationErrors$ | async as errors" [errors] = errors>
+        </app-back-end-message>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="spinner-container" *ngIf="isSubmitting$ | async; else formFields">
+            <app-spinner></app-spinner>
+          </div>
+          <ng-template #formFields>
+            <fieldset>
+              <fieldset class="form-group">
+                <input type="text" class="form-control form-control-lg" placeholder="Email" formControlName="email">
+              </fieldset>
+            </fieldset>
+            <fieldset>
+              <fieldset class="form-group">
+                <input [type]="password ? 'password' : 'text'" class="form-control form-control-lg" placeholder="Password" formControlName="password">
+              </fieldset>
+            </fieldset>
+            <div class="input-group">
+              <input type="checkbox" class="form-check-input" id="checkbox" (change)="password = !password">
+              <label for="checkbox" class="form-check-label">Show password</label>
+            </div>
+            <button class="btn btn-lg btn-success btn-block" type="submit" [disabled]="!form.valid">Log In</button>
+          </ng-template>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

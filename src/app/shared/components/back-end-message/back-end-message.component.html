@@ -1,0 +1,7 @@
+<div *ngIf="errors">
+  <div class="error" *ngIf="errors.email">Sorry email  {{errors.email.toString()}}</div>
+  <div class="error" *ngIf="errors.password">Sorry {{errors.password.toString()}}</div>
+  <div class="error" *ngIf="errors.username">Sorry username {{errors.username.toString()}}</div>
+  <div class="error" *ngIf="errors['email or password']">Sorry email or password {{errors['email or password'].toString()}}</div>
+</div>
+

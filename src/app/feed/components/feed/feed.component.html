@@ -1,0 +1,11 @@
+<div *ngIf="(feedLoading$ | async) ; else feedsContainer">
+  <app-spinner></app-spinner>
+</div>
+<ng-template #feedsContainer>
+  <div *ngIf="feeds$ | async as feeds">
+    <div *ngFor="let article of feeds.articles">
+      <app-feed-single [feed]="article"></app-feed-single>
+    </div>
+  </div>
+</ng-template>
+

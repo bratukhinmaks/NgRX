@@ -1,0 +1,44 @@
+<nav class="navbar navbar-light">
+  <div class="container">
+    <a class="navbar-brand"  [routerLink]="['/']">Maksimum</a>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" [routerLinkActive]="'active'" [routerLink]="['/']" [routerLinkActiveOptions]="{exact: true}" >
+          Home
+        </a>
+      </li>
+      <ng-container *ngIf="!(isLogged$ | async); else user">
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="'active'" [routerLink]="'/register'">
+            Register
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="'active'" [routerLink]="'/login'">
+            Login
+          </a>
+        </li>
+      </ng-container>
+      <ng-template #user>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="'active'" [routerLink]="'/settings'">
+            Settings
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="'active'" [routerLink]="'/articles/new'">
+            New Post
+          </a>
+        </li>
+        <li class="nav-item">
+          <ng-container *ngIf="user$ | async as user">
+            <a class="nav-link" [routerLink]="['/profiles',user.username]">
+              <img class="user-pic" *ngIf='user.image' [src]="user?.image" >
+              {{user.username}}
+            </a>
+          </ng-container>
+        </li>
+      </ng-template>
+    </ul>
+  </div>
+</nav>
