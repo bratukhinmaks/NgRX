@@ -1,30 +1,49 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core'
+import {CommonModule} from '@angular/common'
+import {StoreModule} from '@ngrx/store'
+import {EffectsModule} from '@ngrx/effects'
 
-import {AuthRoutingModule} from './auth-routing.module';
-import {RegisterComponent} from './components/register/register.component';
-import {LoginComponent} from './components/login/login.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {reducer} from "./store/reducers";
-import {StoreModule} from "@ngrx/store";
-import {HttpClientModule} from "@angular/common/http";
-import {EffectsModule} from "@ngrx/effects";
-import {RegisterEffect} from "./store/effects/register.effect";
-import {SharedModule} from "../shared/shared.module";
-import {LoginEffect} from "./store/effects/login.effect";
-import {FetchUserEffect} from "./store/effects/fetchuser.effect";
+import {RegisterComponent} from 'src/app/auth/components/register/register.component'
+import {RouterModule} from '@angular/router'
+import {ReactiveFormsModule} from '@angular/forms'
+import {reducers} from 'src/app/auth/store/reducers'
+import {AuthService} from 'src/app/auth/services/auth.service'
+import {RegisterEffect} from 'src/app/auth/store/effects/register.effect'
+import {BackendErrorMessagesModule} from 'src/app/shared/modules/backendErrorMessages/backendErrorMessages.module'
+import {PersistanceService} from 'src/app/shared/services/persistance.service'
+import {LoginEffect} from 'src/app/auth/store/effects/login.effect'
+import {LoginComponent} from 'src/app/auth/components/login/login.component'
+import {GetCurrentUserEffect} from 'src/app/auth/store/effects/getCurrentUser.effect'
+import {UpdateCurrentUserEffect} from './store/effects/updateCurrentUser.effect'
+import {LogoutEffect} from './store/effects/logout.effect'
 
+const routes = [
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  }
+]
 
 @NgModule({
-  declarations: [RegisterComponent, LoginComponent],
   imports: [
     CommonModule,
-    AuthRoutingModule,
+    RouterModule.forChild(routes),
     ReactiveFormsModule,
-    SharedModule,
-    StoreModule.forFeature('auth', reducer),
-    EffectsModule.forFeature([RegisterEffect,LoginEffect,FetchUserEffect])
-  ]
+    StoreModule.forFeature('auth', reducers),
+    EffectsModule.forFeature([
+      RegisterEffect,
+      LoginEffect,
+      GetCurrentUserEffect,
+      UpdateCurrentUserEffect,
+      LogoutEffect
+    ]),
+    BackendErrorMessagesModule
+  ],
+  declarations: [RegisterComponent, LoginComponent],
+  providers: [AuthService, PersistanceService]
 })
-export class AuthModule {
-}
+export class AuthModule {}

@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  Url: 'https://conduit.productionready.io/api'
-};
+  apiUrl: 'https://conduit.productionready.io/api',
+  limit: 10
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

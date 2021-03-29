@@ -3,16 +3,17 @@ export enum ActionTypes {
   REGISTER_SUCCESS = '[Auth] Register success',
   REGISTER_FAILURE = '[Auth] Register failure',
 
-  LOGIN = '[Auth] Login ',
+  LOGIN = '[Auth] Login',
   LOGIN_SUCCESS = '[Auth] Login success',
   LOGIN_FAILURE = '[Auth] Login failure',
 
-  USERFETCH = '[Auth] User fetch ',
-  USERFETCH_SUCCESS = '[Auth] User fetch success',
-  USERFETCH_FAILURE = '[Auth] User fetch failure',
+  GET_CURRENT_USER = '[Auth] Get current user',
+  GET_CURRENT_USER_SUCCESS = '[Auth] Get current user success',
+  GET_CURRENT_USER_FAILURE = '[Auth] Get current user failure',
 
-  GET_FEED = '[Auth] Get Feeds ',
-  GET_FEED_SUCCESS = '[Auth] Get Feeds Success',
-  GET_FEED_FAILURE = '[Auth] Get Feeds Failure',
+  UPDATE_CURRENT_USER = '[Auth] Update current user',
+  UPDATE_CURRENT_USER_SUCCESS = '[Auth] Update current user success',
+  UPDATE_CURRENT_USER_FAILURE = '[Auth] Update current user failure',
+
+  LOGOUT = '[Auth] Logout'
 }
-

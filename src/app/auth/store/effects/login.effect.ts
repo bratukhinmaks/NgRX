@@ -1,42 +1,54 @@
-import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
+import {Injectable} from '@angular/core'
+import {createEffect, Actions, ofType} from '@ngrx/effects'
+import {map, catchError, switchMap, tap} from 'rxjs/operators'
+import {HttpErrorResponse} from '@angular/common/http'
+import {Router} from '@angular/router'
+import {of} from 'rxjs'
 
-import {catchError, map, switchMap, tap} from "rxjs/operators";
-import {of} from "rxjs";
-
-import {Actions, createEffect, ofType} from "@ngrx/effects";
-
-import {AuthService} from "../../services/auth.service";
-import {PercistentService} from "../../../shared/services/percistent.service";
-
-import {CurrentUserInterface} from "../../../shared/types";
-import {loginAction, loginFailureAction, loginSuccessAction} from "../actions/login.actions";
+import {AuthService} from 'src/app/auth/services/auth.service'
+import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface'
+import {PersistanceService} from 'src/app/shared/services/persistance.service'
+import {
+  loginAction,
+  loginSuccessAction,
+  loginFailureAction
+} from 'src/app/auth/store/actions/login.action'
 
 @Injectable()
 export class LoginEffect {
-  constructor(private actions$: Actions, private authServ: AuthService, private percistent: PercistentService, private router: Router) {
-  }
-  register$ = createEffect(() => this.actions$.pipe(
-    ofType(loginAction),
-    switchMap(({request}) => {
-      return this.authServ.login(request).pipe(
-        map((currentUser: CurrentUserInterface) => {
-          this.percistent.set('token', currentUser.token)
-          return loginSuccessAction({currentUser})
-        }),
-        catchError((err)=> {
-          return of(loginFailureAction({errors: err.error.errors}))
-        })
-      )
-    })
-  ))
+  login$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginAction),
+      switchMap(({request}) => {
+        return this.authService.login(request).pipe(
+          map((currentUser: CurrentUserInterface) => {
+            this.persistanceService.set('accessToken', currentUser.token)
+            return loginSuccessAction({currentUser})
+          }),
 
-  redirectAfterSuccess$ = createEffect(()=> this.actions$.pipe(
-    ofType(loginSuccessAction),
-    tap(()=> {
-      this.router.navigate(['/'])
-    })
-    ),
+          catchError((errorResponse: HttpErrorResponse) => {
+            return of(loginFailureAction({errors: errorResponse.error.errors}))
+          })
+        )
+      })
+    )
+  )
+
+  redirectAfterSubmit$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loginSuccessAction),
+        tap(() => {
+          this.router.navigateByUrl('/')
+        })
+      ),
     {dispatch: false}
   )
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private persistanceService: PersistanceService,
+    private router: Router
+  ) {}
 }

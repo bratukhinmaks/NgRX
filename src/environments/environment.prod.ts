@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  Url: 'https://conduit.productionready.io/api'
-};
+  apiUrl: 'https://conduit.productionready.io/api',
+  limit: 10
+}

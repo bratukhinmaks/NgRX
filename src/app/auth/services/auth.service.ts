@@ -1,32 +1,46 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {AuthResponse, CurrentUserInterface, LoginUserInterface, RequestUserInterface} from "../../shared/types";
-import {Observable} from "rxjs";
-import {environment} from "../../../environments/environment";
-import {map} from "rxjs/operators";
+import {Injectable} from '@angular/core'
+import {HttpClient} from '@angular/common/http'
+import {Observable} from 'rxjs'
+import {map} from 'rxjs/operators'
 
-@Injectable({
-  providedIn: 'root'
-})
+import {RegisterRequestInterface} from 'src/app/auth/types/registerRequest.interface'
+import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface'
+import {environment} from 'src/environments/environment'
+import {AuthResponseInterface} from 'src/app/auth/types/authResponse.interface'
+import {LoginRequestInterface} from 'src/app/auth/types/loginRequest.interface'
+import {CurrentUserInputInterface} from 'src/app/shared/types/currentUserInput.interface'
+
+@Injectable()
 export class AuthService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
+  getUser(response: AuthResponseInterface): CurrentUserInterface {
+    return response.user
   }
 
-  register(data: RequestUserInterface): Observable<CurrentUserInterface> {
-    return this.http.post<AuthResponse>(`${environment.Url}/users`, data).pipe(
-      map((resp)=> resp.user)
-    )
+  register(data: RegisterRequestInterface): Observable<CurrentUserInterface> {
+    const url = environment.apiUrl + '/users'
+    return this.http
+      .post<AuthResponseInterface>(url, data)
+      .pipe(map(this.getUser))
   }
-  login(data: LoginUserInterface): Observable<CurrentUserInterface> {
-    return this.http.post<AuthResponse>(`${environment.Url}/users/login`, data).pipe(
-      map((resp)=> resp.user)
-    )
+
+  login(data: LoginRequestInterface): Observable<CurrentUserInterface> {
+    const url = environment.apiUrl + '/users/login'
+    return this.http
+      .post<AuthResponseInterface>(url, data)
+      .pipe(map(this.getUser))
   }
 
   getCurrentUser(): Observable<CurrentUserInterface> {
-    return this.http.get<AuthResponse>(`${environment.Url}/user`).pipe(
-      map(resp => resp.user)
-    )
+    const url = environment.apiUrl + '/user'
+    return this.http.get(url).pipe(map(this.getUser))
+  }
+
+  updateCurrentUser(
+    data: CurrentUserInputInterface
+  ): Observable<CurrentUserInterface> {
+    const url = environment.apiUrl + '/user'
+    return this.http.put(url, data).pipe(map(this.getUser))
   }
 }
